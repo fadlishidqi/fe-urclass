@@ -12,6 +12,7 @@ export interface Tryout {
   created_at: Date;
   updated_at: Date;
   creator: User;
+  exam_type: "utbk" | "cpns";
   category: string;
   start_date: Date | null;
   end_date: Date | null;

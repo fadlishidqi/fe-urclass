@@ -2,14 +2,22 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { User, Mail, GraduationCap, Edit2, X } from "lucide-react";
+import { User, Mail, GraduationCap, Edit2, X, BookOpenCheck, Landmark, Loader2 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import FormCompleteProfile from "@/components/molecules/form/profile/FormCompleteProfile";
+import { updateKategoriApiHandler } from "@/http/profile/update-kategori";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/utils/get-error-message";
 
 export default function SettingsContent() {
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
+  const queryClient = useQueryClient();
+  const router = useRouter();
   const [isEdit, setIsEdit] = useState(false);
+  const [changingCategory, setChangingCategory] = useState<"utbk" | "cpns" | null>(null);
 
   // Handle loading state gracefully
   if (!session) {
@@ -36,6 +44,30 @@ export default function SettingsContent() {
   const city = user?.city || "-";
   const targetUniversity = user?.target_university_1 || "-";
   const targetMajor = user?.target_major_1 || "-";
+
+  const handleCategoryChange = async (category: "utbk" | "cpns") => {
+    if (!session.access_token || category === user.kategori) return;
+
+    setChangingCategory(category);
+    try {
+      await updateKategoriApiHandler(session.access_token, category);
+      await update();
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["get-user-tryouts"] }),
+        queryClient.invalidateQueries({ queryKey: ["get-history-tryout"] }),
+        queryClient.invalidateQueries({ queryKey: ["get-all-subtests"] }),
+      ]);
+      toast.success(`Kategori belajar diubah ke ${category.toUpperCase()}.`);
+      router.push("/dashboard");
+      router.refresh();
+    } catch (error: unknown) {
+      toast.error("Gagal mengganti kategori", {
+        description: getErrorMessage(error, "Silakan coba lagi."),
+      });
+    } finally {
+      setChangingCategory(null);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -92,7 +124,57 @@ export default function SettingsContent() {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="space-y-6">
+          {user.role === "user" && (
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <h3 className="text-[#004AAB] font-semibold flex items-center gap-2">
+                  <BookOpenCheck className="w-4 h-4" />
+                  Kategori Belajar
+                </h3>
+                <p className="mt-1 text-xs text-gray-500">
+                  Tryout dan materi mengikuti kategori aktif. Riwayat kategori lain tetap tersimpan.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-6">
+                {([
+                  { value: "utbk" as const, label: "UTBK", icon: BookOpenCheck },
+                  { value: "cpns" as const, label: "CPNS", icon: Landmark },
+                ]).map((category) => {
+                  const Icon = category.icon;
+                  const isActive = user.kategori === category.value;
+
+                  return (
+                    <button
+                      key={category.value}
+                      type="button"
+                      disabled={changingCategory !== null || isActive}
+                      onClick={() => handleCategoryChange(category.value)}
+                      className={`flex items-center gap-3 rounded-xl border p-4 text-left transition-colors disabled:cursor-default ${
+                        isActive
+                          ? "border-[#004AAB] bg-[#EBF4FF] text-[#004AAB]"
+                          : "border-gray-200 hover:border-[#004AAB]/40 hover:bg-gray-50"
+                      }`}
+                    >
+                      {changingCategory === category.value ? (
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                      ) : (
+                        <Icon className="h-5 w-5" />
+                      )}
+                      <div>
+                        <p className="font-semibold">{category.label}</p>
+                        <p className="text-xs opacity-70">
+                          {isActive ? "Kategori aktif" : `Ganti ke ${category.label}`}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
           {/* Personal Detail Card */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -129,6 +211,7 @@ export default function SettingsContent() {
             </div>
           </div>
 
+          </div>
         </div>
       )}
 

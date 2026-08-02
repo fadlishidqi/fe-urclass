@@ -38,6 +38,8 @@ export const CreateTryoutHandler = async (
     formData.append("category", body.category);
   }
 
+  formData.append("exam_type", body.exam_type);
+
   if (body.is_published !== undefined) {
     formData.append("is_published", body.is_published ? "1" : "0");
   }

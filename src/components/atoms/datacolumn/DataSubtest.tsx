@@ -35,6 +35,13 @@ export const subtestColumns = (
     ),
   },
   {
+    id: "exam_type",
+    header: "Jenis Ujian",
+    cell: ({ row }) => (
+      <p className="font-medium">{row.original.exam_type.toUpperCase()}</p>
+    ),
+  },
+  {
     id: "category",
     header: "Kategori",
     cell: ({ row }) => {

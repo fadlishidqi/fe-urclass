@@ -10,6 +10,7 @@ import { useState } from "react";
 export default function DashboardContent() {
   const { data: session } = useSession();
   const [profileDialogDismissed, setProfileDialogDismissed] = useState(false);
+  const examType = session?.user?.kategori ?? "utbk";
   const showProfileComplete =
     !!session?.user &&
     (!session.user.phone_number || !session.user.school_origin) &&
@@ -18,9 +19,12 @@ export default function DashboardContent() {
   return (
     <>
       <section className="flex flex-col gap-6">
-        <HeroBanner userName={session?.user?.name ?? "Amunisian"} />
-        <InfoCardCarousel />
-        <LiveClassSection />
+        <HeroBanner
+          userName={session?.user?.name ?? "Amunisian"}
+          examType={examType}
+        />
+        <InfoCardCarousel examType={examType} />
+        <LiveClassSection examType={examType} />
       </section>
 
       {/* Conditionally rendered popup for new users without full profiles */}

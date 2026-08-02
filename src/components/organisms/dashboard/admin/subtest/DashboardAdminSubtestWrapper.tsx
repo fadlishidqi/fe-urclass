@@ -24,6 +24,7 @@ import { toast } from "sonner";
 
 const subtestExportColumns: AdminExportColumn<Subtest>[] = [
   { header: "Nama Subtes", accessor: (row) => row.name },
+  { header: "Jenis Ujian", accessor: (row) => row.exam_type.toUpperCase() },
   { header: "Kategori", accessor: (row) => row.category },
   { header: "Maksimal Soal", accessor: (row) => (row.max_questions === 0 ? "Tidak terbatas" : row.max_questions) },
   { header: "Jumlah Soal", accessor: (row) => row.questions_count ?? 0 },
@@ -55,6 +56,16 @@ export default function DashboardAdminSubtestWrapper() {
     .map((category) => ({ label: category, value: category }));
   const subtestFilters: AdminFilterOption<Subtest>[] = [
     {
+      key: "exam_type",
+      label: "Semua Jenis Ujian",
+      placeholder: "Jenis Ujian",
+      options: [
+        { label: "UTBK", value: "utbk" },
+        { label: "CPNS", value: "cpns" },
+      ],
+      getValue: (row) => row.exam_type,
+    },
+    {
       key: "category",
       label: "Semua Kategori",
       placeholder: "Kategori",
@@ -64,7 +75,7 @@ export default function DashboardAdminSubtestWrapper() {
   ];
   const controls = useAdminTableControls({
     data: subtestRows,
-    searchFields: [(row) => row.name, (row) => row.category],
+    searchFields: [(row) => row.name, (row) => row.category, (row) => row.exam_type],
     filters: subtestFilters,
     sortOptions: subtestSortOptions,
     defaultSort: "newest",

@@ -47,6 +47,7 @@ export default function FormCreateTryout() {
     defaultValues: {
       title: "",
       description: "",
+      exam_type: "utbk",
       category: "UTBK",
       start_date: "",
       end_date: "",
@@ -60,6 +61,7 @@ export default function FormCreateTryout() {
   });
 
   const [preview, setPreview] = useState<string | null>(null);
+  const examType = form.watch("exam_type");
 
   const image = form.watch("image");
 
@@ -139,6 +141,34 @@ export default function FormCreateTryout() {
 
             <Controller
               control={form.control}
+              name="exam_type"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel>Jenis Ujian</FieldLabel>
+                  <Select
+                    onValueChange={(value: "utbk" | "cpns") => {
+                      field.onChange(value);
+                      form.setValue("category", value === "cpns" ? "CPNS" : "UTBK", {
+                        shouldValidate: true,
+                      });
+                    }}
+                    value={field.value}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Pilih jenis ujian" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="utbk">UTBK</SelectItem>
+                      <SelectItem value="cpns">CPNS</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {fieldState.error && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+
+            <Controller
+              control={form.control}
               name="category"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
@@ -149,8 +179,14 @@ export default function FormCreateTryout() {
                       <SelectValue placeholder="Pilih kategori" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="UTBK">UTBK</SelectItem>
-                      <SelectItem value="UM">UM</SelectItem>
+                      {examType === "cpns" ? (
+                        <SelectItem value="CPNS">CPNS</SelectItem>
+                      ) : (
+                        <>
+                          <SelectItem value="UTBK">UTBK</SelectItem>
+                          <SelectItem value="UM">UM</SelectItem>
+                        </>
+                      )}
                     </SelectContent>
                   </Select>
 

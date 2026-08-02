@@ -31,6 +31,7 @@ const PER_PAGE_OPTIONS = [3, 6, 9];
 export default function TryoutPage() {
   const { data: session, status: sessionStatus } = useSession();
   const token = session?.access_token || "";
+  const examType = session?.user?.kategori ?? "utbk";
 
   const [activeFilter, setActiveFilter] = useState("Semua Tryout");
   const [searchQuery, setSearchQuery] = useState("");
@@ -46,6 +47,7 @@ export default function TryoutPage() {
     isFetching: isTryoutsFetching,
   } = useGetUserTryouts({
     token,
+    examType,
   });
 
   const tryouts = useMemo(() => tryoutsData?.data || [], [tryoutsData]);
@@ -163,12 +165,13 @@ export default function TryoutPage() {
               <ChevronLeft className="w-6 h-6" />
             </Link>
             <h1 className="text-xl md:text-2xl font-bold text-gray-900">
-              Daftar Tryout
+              Daftar Tryout {examType.toUpperCase()}
             </h1>
           </div>
           <p className="text-gray-600 text-sm pl-9">
-            Amunisian, tingkatkan skor tryoutmu dan persiapkan diri menghadapi
-            ujian yang akan datang.
+            {examType === "cpns"
+              ? "Latih kemampuan TWK, TIU, dan TKP untuk menghadapi seleksi CPNS."
+              : "Tingkatkan skor dan persiapkan diri menghadapi seleksi masuk perguruan tinggi."}
           </p>
         </div>
 
@@ -223,19 +226,21 @@ export default function TryoutPage() {
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <Select
-            value={categoryFilter}
-            onValueChange={handleCategoryFilterChange}
-          >
-            <SelectTrigger className="h-10 w-full bg-white sm:w-36">
-              <SelectValue placeholder="Jenis TO" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Semua">Semua Jenis</SelectItem>
-              <SelectItem value="UTBK">UTBK</SelectItem>
-              <SelectItem value="UM">UM</SelectItem>
-            </SelectContent>
-          </Select>
+          {examType === "utbk" && (
+            <Select
+              value={categoryFilter}
+              onValueChange={handleCategoryFilterChange}
+            >
+              <SelectTrigger className="h-10 w-full bg-white sm:w-36">
+                <SelectValue placeholder="Jenis TO" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Semua">Semua Jenis</SelectItem>
+                <SelectItem value="UTBK">UTBK</SelectItem>
+                <SelectItem value="UM">UM</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
 
           <Select value={sortBy} onValueChange={handleSortChange}>
             <SelectTrigger className="h-10 w-full bg-white sm:w-48">
@@ -295,7 +300,7 @@ export default function TryoutPage() {
           </>
         ) : (
           <div className="w-full py-12 flex flex-col items-center justify-center text-gray-500">
-            <p>Tidak ada tryout yang ditemukan.</p>
+            <p>Tidak ada tryout {examType.toUpperCase()} yang ditemukan.</p>
           </div>
         )}
       </div>

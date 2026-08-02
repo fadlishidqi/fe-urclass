@@ -16,6 +16,10 @@ export const tryoutSchema = z.object({
   use_irt: z.boolean(),
   randomize_options: z.boolean(),
 
+  exam_type: z.enum(["utbk", "cpns"], {
+    message: "Jenis ujian harus UTBK atau CPNS",
+  }),
+
   start_date: z
     .string()
     .optional()
@@ -34,12 +38,21 @@ export const tryoutSchema = z.object({
 
   image: z.instanceof(File).optional().nullable(),
 
-  category: z
-    .enum(["UTBK", "UM"], {
-      message: "Kategori harus UTBK atau UM",
-    })
-    .optional()
-    .nullable(),
+  category: z.enum(["UTBK", "UM", "CPNS"], {
+    message: "Kategori tryout wajib dipilih",
+  }),
+}).superRefine((data, ctx) => {
+  const isValidCategory = data.exam_type === "cpns"
+    ? data.category === "CPNS"
+    : data.category === "UTBK" || data.category === "UM";
+
+  if (!isValidCategory) {
+    ctx.addIssue({
+      code: "custom",
+      message: "Kategori tidak sesuai dengan jenis ujian",
+      path: ["category"],
+    });
+  }
 });
 
 export type TryoutType = z.infer<typeof tryoutSchema>;

@@ -60,7 +60,11 @@ export default function FormEditTryout({ tryoutId }: FormEditTryoutProps) {
 
   const defaultData = useMemo(() => detailData?.data, [detailData]);
 
-  const normalizeCategory = (category: string | null | undefined): "UTBK" | "UM" => {
+  const normalizeCategory = (
+    category: string | null | undefined,
+    examType: "utbk" | "cpns",
+  ): "UTBK" | "UM" | "CPNS" => {
+    if (examType === "cpns") return "CPNS";
     const normalized = category?.trim().toUpperCase();
     return normalized === "UM" ? "UM" : "UTBK";
   };
@@ -70,6 +74,7 @@ export default function FormEditTryout({ tryoutId }: FormEditTryoutProps) {
     defaultValues: {
       title: "",
       description: "",
+      exam_type: "utbk",
       category: "UTBK",
       start_date: "",
       end_date: "",
@@ -91,10 +96,13 @@ export default function FormEditTryout({ tryoutId }: FormEditTryoutProps) {
   useEffect(() => {
     if (!defaultData) return;
 
+    const examType = defaultData.exam_type ?? "utbk";
+
     form.reset({
       title: defaultData.title ?? "",
       description: defaultData.description ?? "",
-      category: normalizeCategory(defaultData.category),
+      exam_type: examType,
+      category: normalizeCategory(defaultData.category, examType),
       start_date: formatDate(defaultData.start_date),
       end_date: formatDate(defaultData.end_date),
       is_published: defaultData.is_published ?? false,
@@ -139,7 +147,7 @@ export default function FormEditTryout({ tryoutId }: FormEditTryoutProps) {
       id: tryoutId,
       body: {
         ...body,
-        category: body.category ?? normalizeCategory(defaultData?.category),
+        category: body.category ?? normalizeCategory(defaultData?.category, body.exam_type),
       },
     });
   };
@@ -161,6 +169,8 @@ export default function FormEditTryout({ tryoutId }: FormEditTryoutProps) {
       </Card>
     );
   }
+
+  const examType = form.watch("exam_type");
 
   return (
     <Card>
@@ -203,17 +213,51 @@ export default function FormEditTryout({ tryoutId }: FormEditTryoutProps) {
 
             <Controller
               control={form.control}
+              name="exam_type"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel>Jenis Ujian</FieldLabel>
+                  <Select
+                    onValueChange={(value: "utbk" | "cpns") => {
+                      field.onChange(value);
+                      form.setValue("category", value === "cpns" ? "CPNS" : "UTBK", {
+                        shouldValidate: true,
+                      });
+                    }}
+                    value={field.value}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Pilih jenis ujian" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="utbk">UTBK</SelectItem>
+                      <SelectItem value="cpns">CPNS</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {fieldState.error && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+
+            <Controller
+              control={form.control}
               name="category"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Kategori</FieldLabel>
-                  <Select onValueChange={field.onChange} value={field.value ?? "UTBK"}>
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger>
                       <SelectValue placeholder="Pilih kategori" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="UTBK">UTBK</SelectItem>
-                      <SelectItem value="UM">UM</SelectItem>
+                      {examType === "cpns" ? (
+                        <SelectItem value="CPNS">CPNS</SelectItem>
+                      ) : (
+                        <>
+                          <SelectItem value="UTBK">UTBK</SelectItem>
+                          <SelectItem value="UM">UM</SelectItem>
+                        </>
+                      )}
                     </SelectContent>
                   </Select>
                   {fieldState.error && (

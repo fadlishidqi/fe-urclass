@@ -11,6 +11,7 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
+import { BookOpenCheck, Landmark, Target } from "lucide-react";
 
 const INFO_CARDS = [
   {
@@ -50,7 +51,17 @@ const INFO_CARDS = [
   },
 ];
 
-export default function InfoCardCarousel() {
+interface InfoCardCarouselProps {
+  examType?: "utbk" | "cpns";
+}
+
+const CPNS_CARDS = [
+  { title: "Latihan TWK", description: "Perkuat wawasan kebangsaanmu.", icon: Landmark },
+  { title: "Latihan TIU", description: "Asah kemampuan verbal, numerik, dan figural.", icon: BookOpenCheck },
+  { title: "Latihan TKP", description: "Kenali pola soal karakteristik pribadi.", icon: Target },
+];
+
+export default function InfoCardCarousel({ examType = "utbk" }: InfoCardCarouselProps) {
   const [api, setApi] = useState<CarouselApi>();
   const [activeIndex, setActiveIndex] = useState(0);
   const [snapCount, setSnapCount] = useState(0);
@@ -79,6 +90,30 @@ export default function InfoCardCarousel() {
     },
     [api],
   );
+
+  if (examType === "cpns") {
+    return (
+      <section className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-lg font-bold text-gray-900">Fokus Belajar CPNS</h2>
+          <p className="text-sm text-gray-500">Persiapkan tiga bagian utama Seleksi Kompetensi Dasar.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {CPNS_CARDS.map((card) => (
+            <Link
+              key={card.title}
+              href="/dashboard/try-out"
+              className="rounded-2xl border border-blue-100 bg-gradient-to-br from-[#EDF5FF] to-white p-5 transition-all hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <card.icon className="mb-4 h-8 w-8 text-[#004AAB]" />
+              <h3 className="font-bold text-gray-900">{card.title}</h3>
+              <p className="mt-1 text-sm text-gray-500">{card.description}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="flex flex-col gap-4">

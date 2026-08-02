@@ -24,6 +24,7 @@ import { toast } from "sonner";
 
 const tryoutExportColumns: AdminExportColumn<Tryout>[] = [
   { header: "Judul", accessor: (row) => row.title },
+  { header: "Jenis Ujian", accessor: (row) => row.exam_type.toUpperCase() },
   { header: "Kategori", accessor: (row) => row.category },
   { header: "Status", accessor: (row) => (row.is_published ? "Dipublish" : "Draft") },
   { header: "Tipe", accessor: (row) => (row.is_free ? "Gratis" : "Berbayar") },
@@ -64,6 +65,16 @@ export default function DashboardAdminTryoutWrapper() {
     .map((category) => ({ label: category, value: category }));
   const tryoutFilters: AdminFilterOption<Tryout>[] = [
     {
+      key: "exam_type",
+      label: "Semua Jenis Ujian",
+      placeholder: "Jenis Ujian",
+      options: [
+        { label: "UTBK", value: "utbk" },
+        { label: "CPNS", value: "cpns" },
+      ],
+      getValue: (row) => row.exam_type,
+    },
+    {
       key: "status",
       label: "Semua Status",
       placeholder: "Status",
@@ -93,7 +104,7 @@ export default function DashboardAdminTryoutWrapper() {
   ];
   const controls = useAdminTableControls({
     data: tryoutRows,
-    searchFields: [(row) => row.title, (row) => row.description, (row) => row.category],
+    searchFields: [(row) => row.title, (row) => row.description, (row) => row.category, (row) => row.exam_type],
     filters: tryoutFilters,
     sortOptions: tryoutSortOptions,
     defaultSort: "newest",

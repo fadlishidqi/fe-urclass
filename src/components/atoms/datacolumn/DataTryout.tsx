@@ -45,6 +45,13 @@ export const tryoutColumns = (props: DataTryoutProps): ColumnDef<Tryout>[] => [
     },
   },
   {
+    id: "exam_type",
+    header: "Jenis Ujian",
+    cell: ({ row }) => (
+      <Badge variant="outline">{row.original.exam_type.toUpperCase()}</Badge>
+    ),
+  },
+  {
     id: "is_published",
     header: "Status",
     cell: ({ row }) => {

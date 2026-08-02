@@ -8,6 +8,7 @@ export interface UserTryoutData {
   id: string;
   title: string;
   type: "Premium" | "Gratis";
+  examType: "utbk" | "cpns";
   category?: string | null;
   startDate: string;
   endDate: string;
@@ -28,6 +29,7 @@ function mapTryoutBEtoFE(tryout: Tryout): UserTryoutData {
     id: tryout.id,
     title: tryout.title,
     type: tryout.is_free ? "Gratis" : "Premium",
+    examType: tryout.exam_type,
     category: tryout.category,
     startDate: tryout.start_date ? String(tryout.start_date) : "",
     endDate: tryout.end_date ? String(tryout.end_date) : "",
@@ -53,9 +55,17 @@ export const GetUserTryoutsHandler = async (token: string): Promise<GetUserTryou
   return { data: data.data.map(mapTryoutBEtoFE) };
 };
 
-export const useGetUserTryouts = ({ token, options }: { token: string; options?: Partial<UseQueryOptions<GetUserTryoutsResponse, AxiosError>> }) => {
+export const useGetUserTryouts = ({
+  token,
+  examType,
+  options,
+}: {
+  token: string;
+  examType?: "utbk" | "cpns" | null;
+  options?: Partial<UseQueryOptions<GetUserTryoutsResponse, AxiosError>>;
+}) => {
   return useQuery({
-    queryKey: ["get-user-tryouts"],
+    queryKey: ["get-user-tryouts", examType],
     queryFn: () => GetUserTryoutsHandler(token),
     enabled: !!token,
     ...options,

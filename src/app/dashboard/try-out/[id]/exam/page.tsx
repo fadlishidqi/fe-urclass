@@ -83,8 +83,9 @@ function ExamContent({ tryoutId }: { tryoutId: string }) {
         return {
           id: ts.id,
           name: displayName,
-          category:
-            ts.subtest.category === "TPS"
+          category: tryoutDetail.data.exam_type === "cpns"
+            ? "Seleksi Kompetensi Dasar"
+            : ts.subtest.category === "TPS"
               ? "Tes Potensi Skolastik"
               : "Tes Literasi",
           duration: ts.duration_minutes,

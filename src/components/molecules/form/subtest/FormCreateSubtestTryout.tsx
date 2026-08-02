@@ -53,11 +53,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface FormCreateSubtestTryoutProps {
   tryoutId: string;
+  examType: "utbk" | "cpns";
   setOpen: (open: boolean) => void;
 }
 
 export default function FormCreateSubtestTryout({
   tryoutId,
+  examType,
   setOpen,
 }: FormCreateSubtestTryoutProps) {
   const { data: session, status } = useSession();
@@ -70,6 +72,9 @@ export default function FormCreateSubtestTryout({
   });
 
   const [openSubtest, setOpenSubtest] = useState<number | null>(null);
+  const availableSubtests = data?.data?.filter(
+    (subtest) => subtest.exam_type === examType,
+  );
 
   const form = useForm<SubtestTryoutType>({
     resolver: zodResolver(subtestTryoutSchema),
@@ -163,7 +168,7 @@ export default function FormCreateSubtestTryout({
                               className="w-full justify-between"
                             >
                               {field.value
-                                ? data?.data?.find((s) => s.id === field.value)
+                                ? availableSubtests?.find((s) => s.id === field.value)
                                     ?.name
                                 : "Pilih subtest"}
 
@@ -178,7 +183,7 @@ export default function FormCreateSubtestTryout({
                                 <CommandEmpty>Tidak ditemukan</CommandEmpty>
 
                                 <CommandGroup>
-                                  {data?.data?.map((subtest) => (
+                                  {availableSubtests?.map((subtest) => (
                                     <CommandItem
                                       key={subtest.id}
                                       value={subtest.name}

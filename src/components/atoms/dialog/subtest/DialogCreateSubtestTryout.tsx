@@ -10,12 +10,14 @@ interface DialogCreateSubtestTryoutProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   tryoutId: string;
+  examType: "utbk" | "cpns";
 }
 
 export default function DialogCreateSubtestTryout({
   open,
   setOpen,
   tryoutId,
+  examType,
 }: DialogCreateSubtestTryoutProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -23,7 +25,11 @@ export default function DialogCreateSubtestTryout({
         <DialogHeader>
           <DialogTitle>Tambah Subtes ke Tryout</DialogTitle>
         </DialogHeader>
-        <FormCreateSubtestTryout tryoutId={tryoutId} setOpen={setOpen} />
+        <FormCreateSubtestTryout
+          tryoutId={tryoutId}
+          examType={examType}
+          setOpen={setOpen}
+        />
       </DialogContent>
     </Dialog>
   );

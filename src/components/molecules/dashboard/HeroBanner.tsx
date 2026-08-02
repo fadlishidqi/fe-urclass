@@ -4,9 +4,10 @@ import Image from "next/image";
 
 interface HeroBannerProps {
   userName?: string;
+  examType?: "utbk" | "cpns";
 }
 
-export default function HeroBanner({ userName }: HeroBannerProps) {
+export default function HeroBanner({ userName, examType = "utbk" }: HeroBannerProps) {
   const displayName = userName || "Amunisian";
 
   return (
@@ -33,8 +34,9 @@ export default function HeroBanner({ userName }: HeroBannerProps) {
             Welcome {displayName}!
           </h1>
           <p className="text-white/90 text-sm md:text-base leading-relaxed drop-shadow-sm font-medium">
-            Lanjutkan perjalanan belajarmu hari ini dan tingkatkan peluang lolos
-            PTN impianmu.
+            {examType === "cpns"
+              ? "Lanjutkan persiapanmu hari ini dan tingkatkan peluang lolos seleksi CPNS."
+              : "Lanjutkan perjalanan belajarmu hari ini dan tingkatkan peluang lolos PTN impianmu."}
           </p>
         </div>
 

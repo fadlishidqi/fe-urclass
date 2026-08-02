@@ -36,6 +36,13 @@ export const subtestTryoutColumns = (
     ),
   },
   {
+    id: "exam_type",
+    header: "Jenis Ujian",
+    cell: ({ row }) => (
+      <Badge variant="outline">{row.original.subtest.exam_type.toUpperCase()}</Badge>
+    ),
+  },
+  {
     id: "category",
     header: "Kategori",
     cell: ({ row }) => {

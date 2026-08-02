@@ -63,6 +63,7 @@ export default function TryoutDetailPage({
   const isFree = tryout?.is_free ?? true;
   const tryoutType = isFree ? "Gratis" : "Premium";
   const tryoutCategory = tryout?.category || "-";
+  const isCpns = tryout?.exam_type === "cpns";
 
   // Parse subtests from API data
   const subtests: TryoutSubtestSummary[] = (tryout?.tryout_subtests || [])
@@ -79,8 +80,8 @@ export default function TryoutDetailPage({
     });
 
   // Calculate totals  
-  const tpsSubtests = subtests.filter((s) => s.category === "TPS");
-  const litSubtests = subtests.filter((s) => s.category === "Literasi");
+  const tpsSubtests = isCpns ? subtests : subtests.filter((s) => s.category === "TPS");
+  const litSubtests = isCpns ? [] : subtests.filter((s) => s.category === "Literasi");
   const totalQuestions = subtests.reduce((sum, s) => sum + s.questions, 0);
   const totalDuration = subtests.reduce((sum, s) => sum + s.duration, 0);
   const tpsQuestions = tpsSubtests.reduce((sum, s) => sum + s.questions, 0);
@@ -228,7 +229,9 @@ export default function TryoutDetailPage({
           {/* TPS */}
           {tpsSubtests.length > 0 && (
             <div className="space-y-3">
-              <h4 className="font-bold text-gray-900 text-lg">Tes Potensi Skolastik (TPS)</h4>
+              <h4 className="font-bold text-gray-900 text-lg">
+                {isCpns ? "Seleksi Kompetensi Dasar (SKD)" : "Tes Potensi Skolastik (TPS)"}
+              </h4>
               <div className="text-sm text-gray-600 space-y-1">
                 <p>Jumlah Soal : {tpsQuestions} Soal</p>
                 <p>Durasi : {tpsDuration} menit</p>

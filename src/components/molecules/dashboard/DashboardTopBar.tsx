@@ -32,6 +32,7 @@ export default function DashboardTopBar({ userName }: DashboardTopBarProps) {
   const user = session?.user as { fullname?: string; name?: string } | undefined;
   const userNameFromSession = user?.fullname || user?.name;
   const name = userName || userNameFromSession || "Amunisian";
+  const examType = session?.user?.kategori?.toUpperCase();
   const { ticketCount } = useTickets();
   const ticketCountRef = useRef(ticketCount);
   const [ticketChange, setTicketChange] = useState<{ amount: number; current: number } | null>(null);
@@ -148,6 +149,11 @@ export default function DashboardTopBar({ userName }: DashboardTopBarProps) {
                 <span className="text-sm font-bold text-[#013476] leading-tight">
                   {name}
                 </span>
+                {examType && (
+                  <span className="text-[10px] font-semibold text-[#3C8D60]">
+                    Jalur {examType}
+                  </span>
+                )}
               </div>
             </div>
           </DropdownMenuTrigger>
@@ -161,7 +167,7 @@ export default function DashboardTopBar({ userName }: DashboardTopBarProps) {
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">{name}</p>
                 <p className="text-xs leading-none text-muted-foreground">
-                  Pengguna Amunisi
+                  Pengguna {examType ?? "UrClass"}
                 </p>
               </div>
             </DropdownMenuLabel>

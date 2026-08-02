@@ -1,8 +1,12 @@
-export default function LiveClassSection() {
+interface LiveClassSectionProps {
+  examType?: "utbk" | "cpns";
+}
+
+export default function LiveClassSection({ examType = "utbk" }: LiveClassSectionProps) {
   return (
     <section className="flex flex-col gap-4">
       <h2 className="text-lg font-bold text-gray-900">
-        Jadwal Live Class Gratis 🎓
+        {examType === "cpns" ? "Jadwal Kelas Persiapan CPNS 🎓" : "Jadwal Live Class Gratis 🎓"}
       </h2>
       <div className="w-full min-h-[200px] rounded-2xl border-2 border-dashed border-gray-200 bg-white flex flex-col items-center justify-center gap-3 p-8">
         <div className="text-4xl">📅</div>

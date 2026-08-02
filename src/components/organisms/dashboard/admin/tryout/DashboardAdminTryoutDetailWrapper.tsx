@@ -123,6 +123,16 @@ export default function DashboardAdminTryoutDetailWrapper({
               <span className="font-medium">{data?.data.description}</span>
             </div>
             <div className="flex flex-col gap-1">
+              <h3 className="text-muted-foreground">Jenis Ujian</h3>
+              <Badge variant="outline" className="w-fit">
+                {data?.data.exam_type?.toUpperCase() ?? "-"}
+              </Badge>
+            </div>
+            <div className="flex flex-col gap-1">
+              <h3 className="text-muted-foreground">Kategori Tryout</h3>
+              <span className="font-medium">{data?.data.category ?? "-"}</span>
+            </div>
+            <div className="flex flex-col gap-1">
               <h3 className="text-muted-foreground">Status Tryout</h3>
               <Badge
                 className={
@@ -250,6 +260,7 @@ export default function DashboardAdminTryoutDetailWrapper({
         open={isDialogOpen}
         setOpen={setIsDialogOpen}
         tryoutId={id}
+        examType={data?.data.exam_type ?? "utbk"}
       />
 
       <AlertDialogDeleteSubtest
