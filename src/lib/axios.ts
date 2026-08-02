@@ -1,9 +1,10 @@
 import axios from "axios";
+import { API_BASE_URL } from "@/lib/runtime-config";
 
 export const AUTH_TOKEN_INVALID_EVENT = "amunisi:auth-token-invalid";
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: API_BASE_URL,
   headers: {
     "Accept": "application/json",
   },

@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { API_BASE_URL } from "@/lib/runtime-config";
 import {
   Dialog,
   DialogContent,
@@ -104,14 +105,13 @@ export default function DialogBulkImportQuestion({
   };
 
   const handleDownloadTemplate = async (type: "csv" | "xlsx") => {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
     const endpoint = type === "xlsx"
       ? "/admin/questions/bulk-import/excel-template"
       : "/admin/questions/bulk-import/template";
     const filename = type === "xlsx" ? "template-soal-amunisi.xlsx" : "template-soal-amunisi.csv";
 
     try {
-      const response = await fetch(`${baseUrl}${endpoint}`, {
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) {

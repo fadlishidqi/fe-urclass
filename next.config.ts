@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         pathname: "/storage/**",
       },
       {
+        protocol: "https",
+        hostname: "urclass.sangkolo.my.id",
+        pathname: "/storage/**",
+      },
+      {
         protocol: "http",
         hostname: "127.0.0.1",
         port: "8000",

@@ -29,11 +29,11 @@ export const metadata: Metadata = {
     "platform tryout indonesia",
     "persiapan utbk",
   ],
-  authors: [{ name: "UrClass", url: "https://app.amunisiptn.com" }],
+  authors: [{ name: "UrClass", url: "https://fe-urclass.sangkolo.my.id" }],
   applicationName: "UrClass",
-  metadataBase: new URL("https://app.amunisiptn.com"),
+  metadataBase: new URL("https://fe-urclass.sangkolo.my.id"),
   alternates: {
-    canonical: "https://app.amunisiptn.com",
+    canonical: "https://fe-urclass.sangkolo.my.id",
   },
   robots: {
     index: true,
@@ -50,11 +50,11 @@ export const metadata: Metadata = {
     title: "UrClass - Tryout & Bimbel SNBP, UTBK (SNBT) & UM PTN",
     description:
       "Gabung UrClass untuk tryout UTBK: simulasi ujian real-time, pembahasan lengkap, kelas intensif, dan analitik progress. Siapkan strategi masuk PTN terbaikmu.",
-    url: "https://app.amunisiptn.com",
+    url: "https://fe-urclass.sangkolo.my.id",
     siteName: "UrClass",
     images: [
       {
-        url: "https://app.amunisiptn.com/images/logo/urclass.png",
+        url: "https://fe-urclass.sangkolo.my.id/images/logo/urclass.png",
         width: 1200,
         height: 630,
         alt: "UrClass - Tryout & Bimbel SNBP, UTBK, UM PTN",
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
     description:
       "Simulasi UTBK, pembahasan lengkap, dan paket bimbel intensif - semua ada di UrClass.",
     creator: "@UrClass",
-    images: ["https://app.amunisiptn.com/images/logo/urclass.png"],
+    images: ["https://fe-urclass.sangkolo.my.id/images/logo/urclass.png"],
   },
 };
 

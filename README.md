@@ -16,6 +16,18 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+Copy `.env.example` to `.env.local` for local development.
+
+## Production domains
+
+- Frontend: `https://fe-urclass.sangkolo.my.id`
+- Backend API: `https://urclass.sangkolo.my.id/api`
+- Backend storage: `https://urclass.sangkolo.my.id/storage`
+
+Use `.env.production.example` as the deployment environment template. Set a
+unique `AUTH_SECRET` and the actual Midtrans client key in the hosting
+environment; do not commit their real values.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

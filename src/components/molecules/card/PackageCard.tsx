@@ -3,10 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Package, Tag, Ticket } from "lucide-react";
-
-const STORAGE_BASE_URL =
-  process.env.NEXT_PUBLIC_STORAGE_URL ??
-  "https://dev-api.amunisiptn.com/storage";
+import { STORAGE_BASE_URL } from "@/lib/runtime-config";
 
 interface PackageCardProps {
   id: string;

@@ -8,6 +8,7 @@ import {
 import { useGetDetailPackage } from "@/http/packages/get-detail-package";
 import { formatPrice } from "@/utils/format-price";
 import { useSession } from "next-auth/react";
+import { STORAGE_BASE_URL } from "@/lib/runtime-config";
 
 interface DialogPackageDetailProps {
   open: boolean;
@@ -30,12 +31,8 @@ export default function DialogPackageDetail({
     },
   });
 
-  const storageUrl =
-    process.env.NEXT_PUBLIC_STORAGE_URL ??
-    "https://dev-api.amunisiptn.com/storage";
-
   const thumbnailUrl = data?.data?.thumbnail
-    ? `${storageUrl}/${data.data.thumbnail}`
+    ? `${STORAGE_BASE_URL}/${data.data.thumbnail}`
     : null;
 
   return (

@@ -35,10 +35,7 @@ import { CURRENCIES } from "@/constants/currency";
 import { useSession } from "next-auth/react";
 import { useUpdatePackage } from "@/http/packages/update-package";
 import { ImagePlus, X } from "lucide-react";
-
-const STORAGE_BASE_URL =
-  process.env.NEXT_PUBLIC_STORAGE_URL ??
-  "https://dev-api.amunisiptn.com/storage";
+import { STORAGE_BASE_URL } from "@/lib/runtime-config";
 
 interface FormUpdatePackageProps {
   packageId: string;
